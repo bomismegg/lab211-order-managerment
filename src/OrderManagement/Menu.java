@@ -58,7 +58,7 @@ public class Menu {
                 }
                 if (needAdmin() && !isAdmin()) {
                     System.out.println("Must be admin to use this function");
-                    return MenuItem.BACK;
+                    subOption = primaryOption;
                 }
             }
         } while (primaryOption != MenuItem.EXIT && subOption == MenuItem.BACK);
