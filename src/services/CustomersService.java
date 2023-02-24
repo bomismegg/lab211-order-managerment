@@ -68,14 +68,20 @@ public class CustomersService extends DataManagement<Customers> {
 
     public void search() {
         String FindID = Util.inputString("Enter the customerID you want to find", true);
-        for (Customers customers : entityList) {
-            if (customers.getCustomerID().equals(FindID)) {
-                // format
-                System.out.println(customers);
-                return;
-            }
+        Customers cus = getCustomerById(FindID);
+        if (cus != null) {
+            // format
+            Formatter fmt = new Formatter();
+            fmt.format("%6s %20s %12s %15s\n", "Id", "Name", "Address", "Phone");
+            fmt.format("%6s %20s %12s %15s",
+                    cus.getCustomerID(),
+                    cus.getCustomerName(),
+                    cus.getCustomerAddress(),
+                    cus.getCustomerPhone());
+            System.out.println(fmt);
+        } else {
+            System.out.println("Not found");
         }
-        System.out.println("Not Found");
     }
 
     private void printOutTable(List<Customers> list) {

@@ -1,10 +1,8 @@
 package model;
 
 import services.CustomersService;
-import java.util.Comparator;
 import utils.*;
 import services.ProductService;
-import java.text.ParseException;
 import java.util.Date;
 
 /**
