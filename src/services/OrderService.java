@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 package services;
 
 import dataservice.DataManagement;
@@ -60,6 +56,7 @@ public class OrderService extends DataManagement<Orders> {
             System.out.println("Not found");
         } else {
             order.update();
+            System.out.println("Updated.");
             saveData();
         }
     }
@@ -80,7 +77,9 @@ public class OrderService extends DataManagement<Orders> {
         Collections.sort(entityList, new Comparator<Orders>() {
             @Override
             public int compare(Orders o1, Orders o2) {
-                return o1.getCustomerID().compareTo(o2.getCustomerID());
+                String name1 = CustomersService.getInstance().getCustomerById(o1.getCustomerID()).getCustomerName();
+                String name2 = CustomersService.getInstance().getCustomerById(o2.getCustomerID()).getCustomerName();
+                return name1.compareTo(name2);
             }
         });
         printOutTable(entityList);
@@ -96,12 +95,19 @@ public class OrderService extends DataManagement<Orders> {
 
     private void printOutTable(List<Orders> list) {
         Formatter fmt = new Formatter();
-        fmt.format("%9s %11s %11s %9s %13s %9s\n", "OrderID", "CustomerID",
-                "ProductID", "Quantity", "OrderDate", "Status");
+        fmt.format("%9s %11s %17s %11s %9s %13s %9s\n", 
+                "OrderID",
+                "CustomerID",
+                "CustomerName",
+                "ProductID",
+                "Quantity",
+                "OrderDate",
+                "Status");
         for (Orders ord : list) {
-            fmt.format("%9s %11s %11s %9s %13s %9s\n",
+            fmt.format("%9s %11s %17s %11s %9s %13s %9s\n",
                     ord.getOrderID(),
                     ord.getCustomerID(),
+                    CustomersService.getInstance().getCustomerById(ord.getCustomerID()).getCustomerName(),
                     ord.getProductID(),
                     ord.getOrderQuantity(),
                     Util.toString(ord.getOrderDate()),
