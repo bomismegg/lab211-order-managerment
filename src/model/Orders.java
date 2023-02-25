@@ -120,6 +120,8 @@ public class Orders implements Comparable<Orders> {
     public void input() {
 
         // customerID
+        System.out.println("Customers List:");
+        CustomersService.getInstance().printAll();
         do {
             String customerID = Util.inputString("Input customer's id", false);
             if (CustomersService.getInstance().getCustomerById(customerID) != null) {
@@ -135,6 +137,8 @@ public class Orders implements Comparable<Orders> {
         } while (true);
 
         // productID
+        System.out.println("Products List:");
+        ProductService.getInstance().PrintAll();
         do {
             String productID = Util.inputString("Input product's id", false);
             if (ProductService.getInstance().getProductById(productID) != null) {
@@ -151,7 +155,7 @@ public class Orders implements Comparable<Orders> {
 
         // orderQuantity
         do {
-            int quantity = Util.inputInt("Input order quantity");
+            int quantity = Util.inputInteger("Input order quantity", 0, Integer.MAX_VALUE);
             if (Validation.checkOrderQuantity(quantity)) {
                 setOrderQuantity(quantity);
                 break;
@@ -162,7 +166,7 @@ public class Orders implements Comparable<Orders> {
 
         // orderDate
         do {
-            Date orderDate = Util.inputDate("Input order date",false);
+            Date orderDate = Util.inputDate("Input order date", false);
             if (Validation.validateDate(orderDate)) {
                 setOrderDate(orderDate);
                 break;
@@ -173,9 +177,9 @@ public class Orders implements Comparable<Orders> {
 
         // status
         do {
-            String status = Util.inputString("Input status (T/F)", false);
+            boolean status = Util.inputBoolean("Input status (T/F)");
             if (Validation.checkStatus(status)) {
-                setStatus(status.trim().toUpperCase().startsWith("T"));
+                setStatus(status);
                 break;
             } else {
                 System.out.println("Error.");
@@ -270,9 +274,9 @@ public class Orders implements Comparable<Orders> {
         // status
         do {
             System.out.println("\nOld order status: " + this.status);
-            String status = Util.inputString("Enter the new status(T/F)", true);
+            String status = Util.inputString("Enter the new status (T/F)", true);
             if (!status.isEmpty()) {
-                if (Validation.checkStatus(status)) {
+                if (status.trim().toUpperCase().startsWith("T")||status.trim().toUpperCase().startsWith("F")) {
                     setStatus(status.trim().toUpperCase().startsWith("T"));
                     break;
                 } else {

@@ -15,6 +15,11 @@ public class Util {
     public static final String SEP = ", ";
     public static final String DATE_FORMAT = "MM/dd/yyyy";
 
+    static Scanner sc = new Scanner(System.in);
+
+    private Util() {
+    }
+
     public static int inputInteger(String message, int minValue, int maxValue) {
         int val = minValue - 1;
         Scanner sc = new Scanner(System.in);
@@ -29,11 +34,6 @@ public class Util {
         return val;
     }
 
-    static Scanner sc = new Scanner(System.in);
-
-    private Util() {
-    }
-
     public static String inputString(String message, boolean allowEmpty) {
         Scanner sc = new Scanner(System.in);
         String str = "";
@@ -42,6 +42,16 @@ public class Util {
             str = sc.nextLine();
         } while (!allowEmpty && str.isBlank());
         return str.trim();
+    }
+
+    public static boolean inputBoolean(String message) {
+        Scanner sc = new Scanner(System.in);
+        String res = "";
+        do {
+            System.out.print(message + ": ");
+            res = sc.nextLine();
+        } while (!res.trim().toLowerCase().startsWith("t") && !res.trim().toLowerCase().startsWith("f"));
+        return res.trim().toLowerCase().startsWith("t");
     }
 
     public static boolean validateStringPattern(String str, String regex, boolean ignoreCase) {
@@ -72,22 +82,6 @@ public class Util {
             str = sc.nextLine();
         } while (str.length() > min && str.length() < max);
         return str.trim();
-    }
-
-    public static int inputInt(String msg) {
-        int data = 0;
-        boolean flag;
-        do {
-            try {
-                flag = false;
-                System.out.print(msg);
-                data = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println(e);
-                flag = true;
-            }
-        } while (flag);
-        return data;
     }
 
     public static double inputDouble(String msg) {

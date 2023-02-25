@@ -36,9 +36,9 @@ public class ProductService extends DataManagement<Products> {
     
     private void printOutTable(List<Products> list) {
         Formatter fmt = new Formatter();
-        fmt.format("%12s %25s %20s %25s %8s\n", "ProductID", "Name", "Unit", "Origin", "Price");
+        fmt.format("%6s %25s %20s %25s %8s\n", "ID", "Name", "Unit", "Origin", "Price");
         for (Products product : list) {
-            fmt.format("%12s %25s %20s %25s %8s\n",
+            fmt.format("%6s %25s %20s %25s %8s\n",
                     product.getProductID(),
                     product.getProductName(),
                     product.getUnit(),

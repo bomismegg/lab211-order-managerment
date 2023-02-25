@@ -73,11 +73,8 @@ public class Validation {
         }
         return true;
     }
-    
-    public static boolean checkStatus(String status){
-        if(status.trim().toLowerCase().startsWith("t")||status.trim().toLowerCase().startsWith("f")){
-            return true;
-        }
-        return false;
+
+    public static boolean checkStatus(boolean status) {
+        return (status == true || status == false);
     }
 }
