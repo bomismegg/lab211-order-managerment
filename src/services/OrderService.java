@@ -94,26 +94,26 @@ public class OrderService extends DataManagement<Orders> {
     }
 
     private void printOutTable(List<Orders> list) {
-        Formatter fmt = new Formatter();
-        fmt.format("%9s %11s %17s %11s %9s %13s %9s\n", 
-                "OrderID",
-                "CustomerID",
-                "CustomerName",
-                "ProductID",
-                "Quantity",
-                "OrderDate",
-                "Status");
-        for (Orders ord : list) {
-            fmt.format("%9s %11s %17s %11s %9s %13s %9s\n",
-                    ord.getOrderID(),
-                    ord.getCustomerID(),
-                    CustomersService.getInstance().getCustomerById(ord.getCustomerID()).getCustomerName(),
-                    ord.getProductID(),
-                    ord.getOrderQuantity(),
-                    Util.toString(ord.getOrderDate()),
-                    ord.getStatus());
-        }
-        System.out.println(fmt);
+//        Formatter fmt = new Formatter();
+//        fmt.format("%9s %11s %17s %11s %9s %13s %9s\n", 
+//                "OrderID",
+//                "CustomerID",
+//                "CustomerName",
+//                "ProductID",
+//                "Quantity",
+//                "OrderDate",
+//                "Status");
+//        for (Orders ord : list) {
+//            fmt.format("%9s %11s %17s %11s %9s %13s %9s\n",
+//                    ord.getOrderID(),
+//                    ord.getCustomerID(),
+//                    CustomersService.getInstance().getCustomerById(ord.getCustomerID()).getCustomerName(),
+//                    ord.getProductID(),
+//                    ord.getOrderQuantity(),
+//                    Util.toString(ord.getOrderDate()),
+//                    ord.getStatus());
+//        }
+        System.out.println(toString());
     }
 
     @Override
@@ -121,6 +121,10 @@ public class OrderService extends DataManagement<Orders> {
         try {
             Orders obj = new Orders();
             obj.parseOrders(stringEntity);
+            Orders existsOrder = getOrderById(obj.getOrderID());
+            if (existsOrder != null) {
+                existsOrder.setProductList(obj.getProductList());
+            }
             return obj;
         } catch (Exception ex) {
             Logger.getLogger(OrderService.class.getName()).log(Level.SEVERE, null, ex);
