@@ -6,21 +6,20 @@ import utils.*;
 import services.ProductService;
 import java.util.Date;
 import java.util.List;
+import services.OrderService;
 
 /**
  *
  * @author Minh Tri
  */
-public class Orders implements Comparable<Orders> {
+public class Orders {
 
     private static final String ID_FORMAT = "DXXX";
     private static final String ID_PATTERN = "D\\{3}";
     private static int ENTITY_ATTRIBUTE_COUNT = 6;
 
     private String orderID;
-    private String customerID;
-//    private String productID;
-//    private int orderQuantity;
+    private Customers customer;
     private List<OrderLine> productList;
     private Date orderDate;
     private boolean status;
@@ -52,16 +51,12 @@ public class Orders implements Comparable<Orders> {
         }
     }
 
-    public String getCustomerID() {
-        return customerID;
+    public Customers getCustomer() {
+        return customer;
     }
 
-    public void setCustomerID(String customerID) {
-        if (Validation.checkCustomerID(customerID)) {
-            this.customerID = customerID;
-        } else {
-
-        }
+    public void setCustomer(Customers customer) {
+        this.customer = customer;
     }
 
     public List<OrderLine> getProductList() {
@@ -74,29 +69,6 @@ public class Orders implements Comparable<Orders> {
         }
     }
 
-//    public String getProductID() {
-//        return productID;
-//    }
-//
-//    public void setProductID(String productID) {
-//        if (Validation.checkProductID(productID)) {
-//            this.productID = productID;
-//        } else {
-////            throw new OException("Error");
-//        }
-//    }
-//
-//    public int getOrderQuantity() {
-//        return orderQuantity;
-//    }
-//
-//    public void setOrderQuantity(int orderQuantity) {
-//        if (Validation.checkOrderQuantity(orderQuantity)) {
-//            this.orderQuantity = orderQuantity;
-//        } else {
-//
-//        }
-//    }
     public Date getOrderDate() {
         return orderDate;
     }
@@ -137,9 +109,10 @@ public class Orders implements Comparable<Orders> {
         CustomersService.getInstance().printAll();
         do {
             String customerID = Util.inputString("Input customer's id", false);
-            if (CustomersService.getInstance().getCustomerById(customerID) != null) {
-                if (Validation.checkCustomerID(customerID)) {
-                    setCustomerID(customerID);
+            Customers customer = CustomersService.getInstance().getCustomerById(customerID);
+            if (customer != null) {
+                if (Validation.checkCustomerID(customer.getCustomerID())) {
+                    setCustomer(customer);
                     break;
                 } else {
                     System.out.println("Error");
@@ -149,51 +122,37 @@ public class Orders implements Comparable<Orders> {
             }
         } while (true);
 
-        // productID
+        // productList
         System.out.println("Products List:");
         ProductService.getInstance().PrintAll();
         String productID = null;
         do {
-
-//            do {
-                productID = Util.inputString("Input product's id", true);
-                if (!productID.isBlank() && ProductService.getInstance().getProductById(productID) != null) {
-                    if (Validation.checkProductID(productID)) {
-//                        setProductID(productID);
-                        int quantity = Util.inputInteger("Input order quantity", 0, Integer.MAX_VALUE);
-                        this.productList.add(new OrderLine(productID, quantity));
-//                        break;
-                    } else {
-                        System.out.println("Error");
-                    }
+            productID = Util.inputString("Input product's id", true);
+            if (productID.isBlank()) {
+                break;
+            }
+            if (ProductService.getInstance().getProductById(productID) != null) {
+                if (Validation.checkProductID(productID)) {
+                    int quantity = Util.inputInteger("Input order quantity", 0, Integer.MAX_VALUE);
+                    this.productList.add(new OrderLine(productID, quantity));
                 } else {
-                    System.out.println("Product not found.");
+                    System.out.println("Error");
                 }
-//            } while (true);
-
-            // orderQuantity
-//            do {
-//                int quantity = Util.inputInteger("Input order quantity", 0, Integer.MAX_VALUE);
-//                if (Validation.checkOrderQuantity(quantity)) {
-//                    setOrderQuantity(quantity);
-//                    break;
-//                } else {
-//                    System.out.println("Error.");
-//                }
-//            } while (true);
+            } else {
+                System.out.println("Product not found.");
+            }
         } while (!productID.isBlank() || this.productList.isEmpty());
 
         // orderDate
-//        do {
-//            Date orderDate = Util.inputDate("Input order date", false);
-//            if (Validation.validateDate(orderDate)) {
-//                setOrderDate(orderDate);
-//                break;
-//            } else {
-//                System.out.println("Error.");
-//            }
-//        } while (true);
-
+        do {
+            Date orderDate = Util.inputDate("Input order date", false);
+            if (Validation.validateDate(orderDate)) {
+                setOrderDate(orderDate);
+                break;
+            } else {
+                System.out.println("Error.");
+            }
+        } while (true);
         // status
         do {
             boolean status = Util.inputBoolean("Input status (T/F)");
@@ -227,52 +186,69 @@ public class Orders implements Comparable<Orders> {
         } while (true);
 
         // customerID
-//        do {
-//            System.out.println("\nOld customer ID: " + this.customerID);
-//            String cID = Util.inputString("Enter the new customer ID", true);
-//            if (!cID.isEmpty()) {
-//                if (Validation.checkCustomerID(cID)) {
-//                    setCustomerID(cID);
-//                    break;
-//                } else {
-//                    System.out.println("Error");
-//                }
-//            } else {
-//                break;
-//            }
-//        } while (true);
-//
-//        // productID
-//        do {
-//            System.out.println("\nOld product ID: " + this.productID);
-//            String pID = Util.inputString("Enter the new product ID", true);
-//            if (!pID.isEmpty()) {
-//                if (Validation.checkProductID(pID)) {
-//                    setProductID(pID);
-//                    break;
-//                } else {
-//                    System.out.println("Error");
-//                }
-//            } else {
-//                break;
-//            }
-//        } while (true);
+        System.out.println("Customers List:");
+        CustomersService.getInstance().printAll();
+        System.out.println("Old Customer Name: " + this.customer.getCustomerName());
+        String customerID;
+        do {
+            customerID = Util.inputString("Input new customer's id", true);
+            if (!customerID.isEmpty()) {
+                Customers customer = CustomersService.getInstance().getCustomerById(customerID);
+                if (customer != null) {
+                    if (Validation.checkCustomerID(customer.getCustomerID())) {
+                        setCustomer(customer);
+                        break;
+                    } else {
+                        System.out.println("Error");
+                    }
+                } else {
+                    System.out.println("Customer not found.");
+                }
 
-        // orderQuantity
-//        do {
-//            System.out.println("\nOld order quantity: " + this.orderQuantity);
-//            String quantity = Util.inputString("Enter the new product ID", true);
-//            if (!quantity.isEmpty()) {
-//                if (Validation.checkOrderQuantity(Integer.parseInt(quantity))) {
-//                    setOrderQuantity(Integer.parseInt(quantity));
-//                    break;
-//                } else {
-//                    System.out.println("Error");
-//                }
-//            } else {
-//                break;
-//            }
-//        } while (true);
+            } else {
+                break;
+            }
+        } while (true);
+
+        // productList
+        System.out.println("Products List:");
+        ProductService.getInstance().PrintAll();
+        System.out.println("Old product list: ");
+        System.out.println(OrderService.getInstace().getAllOrderLine(productList));
+        for (OrderLine ord : productList) {
+            do {
+                System.out.println("Product: " + ord);
+                String isModify = Util.inputString("Modify or Remove", false);
+                if (isModify.trim().toUpperCase().startsWith("R")) {
+//                    productList.remove(ord);
+                    System.out.println("Removed");
+                    break;
+                }
+                String ID = Util.inputString("Enter the new product ID", true);
+                if (ID.isEmpty()) {
+                    break;
+                } else {
+                    if (!Validation.checkProductID(ID)) {
+                        System.out.println("Error");
+                        continue;
+                    } else {
+                        ord.setProductID(ID);
+                    }
+                }
+                String quantityString = Util.inputString("Enter the new quantity", true);
+                if (quantityString.isEmpty()) {
+                    break;
+                } else {
+                    int quantity = Integer.parseInt(quantityString);
+                    if (!Validation.checkOrderQuantity(quantity)) {
+                        System.out.println("Error");
+                    } else {
+                        ord.setOrderQuantity(quantity);
+                        break;
+                    }
+                }
+            } while (true);
+        }
 
         // orderDate
         do {
@@ -311,35 +287,27 @@ public class Orders implements Comparable<Orders> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (OrderLine orderLine : productList) {
-            sb.append(System.lineSeparator());
             sb.append(orderID);
-            sb.append(Util.SEP).append(customerID);
+            sb.append(Util.SEP).append(customer.getCustomerID());
             sb.append(Util.SEP).append(orderLine.getProductID());
             sb.append(Util.SEP).append(orderLine.getOrderQuantity());
             sb.append(Util.SEP).append(Util.toString(orderDate));
             sb.append(Util.SEP).append(status);
+            sb.append("\n");
         }
-        return sb.toString().substring(1);
+        return sb.toString();
     }
 
     public void parseOrders(String entityString) throws Exception {
-        // can check so luong attribute  (id, name, price, quantity, publisherId, status)
         if (entityString != null) {
             String[] attributes = entityString.split(Util.SEP, -1);
             if (attributes.length >= Orders.ENTITY_ATTRIBUTE_COUNT) {
                 setOrderID(attributes[0]);
-                setCustomerID(attributes[1]);
-//                setProductID(attributes[2]);
-//                setOrderQuantity(Integer.parseInt(attributes[3]));
+                setCustomer(CustomersService.getInstance().getCustomerById(attributes[1]));
                 productList.add(new OrderLine(attributes[2], Integer.parseInt(attributes[3])));
                 setOrderDate(Util.toDate(attributes[4]));
                 setStatus(Boolean.parseBoolean(attributes[5]));
             }
         }
-    }
-
-    @Override
-    public int compareTo(Orders o) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

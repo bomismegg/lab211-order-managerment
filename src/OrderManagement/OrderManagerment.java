@@ -27,18 +27,18 @@ public class OrderManagerment {
 
     private void init() {
         try {
-            // order
-            this.orderManagement = orderManagement.getInstace();
-            this.orderManagement.setDatabaseService(new FileDataService(OrderManagerment.orderDataFilePath, Orders.getAttributesHeader()));
-            this.orderManagement.loadData();
-            // product
-            this.productManagement = productManagement.getInstance();
-            this.productManagement.setDatabaseService(new FileDataService(OrderManagerment.productDataFilePath, Products.getAttributesHeader()));
-            this.productManagement.loadData();
             // customer
             this.customerManagement = customerManagement.getInstance();
             this.customerManagement.setDatabaseService(new FileDataService(OrderManagerment.customerDataFilePath, Customers.getAttributesHeader()));
             this.customerManagement.loadData();
+            // product
+            this.productManagement = productManagement.getInstance();
+            this.productManagement.setDatabaseService(new FileDataService(OrderManagerment.productDataFilePath, Products.getAttributesHeader()));
+            this.productManagement.loadData();
+            // order
+            this.orderManagement = orderManagement.getInstace();
+            this.orderManagement.setDatabaseService(new FileDataService(OrderManagerment.orderDataFilePath, Orders.getAttributesHeader()));
+            this.orderManagement.loadData();
         } catch (Exception ex) {
             Logger.getLogger(OrderManagerment.class.getName()).log(Level.SEVERE, null, ex);
         }

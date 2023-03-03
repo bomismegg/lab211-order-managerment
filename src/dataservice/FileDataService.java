@@ -62,7 +62,6 @@ public class FileDataService implements IDatabaseService{
             writer.append("\n");
             for (String entityString : entityStringList) {
                 writer.append(entityString);
-                writer.append("\n");
             }
             return true;
         } catch (IOException ex) {
@@ -76,7 +75,6 @@ public class FileDataService implements IDatabaseService{
         System.out.println("Insert data to file " + this.filePath + " ...");
         try ( BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.append(entityString);
-            writer.append("\n");
             return true;
         } catch (IOException ex) {
             Logger.getLogger(FileDataService.class.getName()).log(Level.SEVERE, null, ex);

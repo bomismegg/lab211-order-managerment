@@ -7,6 +7,7 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.OrderLine;
 import model.Orders;
 import utils.Util;
 
@@ -30,7 +31,8 @@ public class OrderService extends DataManagement<Orders> {
             order.setOrderID(orderID);
             order.input();
             if (entityList.add(order)) {
-                insertData(order);
+//                insertData(order);
+                saveData();
             }
         } else {
             System.out.println("This order [" + orderID + "] already exists.");
@@ -77,8 +79,8 @@ public class OrderService extends DataManagement<Orders> {
         Collections.sort(entityList, new Comparator<Orders>() {
             @Override
             public int compare(Orders o1, Orders o2) {
-                String name1 = CustomersService.getInstance().getCustomerById(o1.getCustomerID()).getCustomerName();
-                String name2 = CustomersService.getInstance().getCustomerById(o2.getCustomerID()).getCustomerName();
+                String name1 = o1.getCustomer().getCustomerName();
+                String name2 = o2.getCustomer().getCustomerName();
                 return name1.compareTo(name2);
             }
         });
@@ -94,26 +96,35 @@ public class OrderService extends DataManagement<Orders> {
     }
 
     private void printOutTable(List<Orders> list) {
-//        Formatter fmt = new Formatter();
-//        fmt.format("%9s %11s %17s %11s %9s %13s %9s\n", 
-//                "OrderID",
-//                "CustomerID",
-//                "CustomerName",
-//                "ProductID",
-//                "Quantity",
-//                "OrderDate",
-//                "Status");
-//        for (Orders ord : list) {
-//            fmt.format("%9s %11s %17s %11s %9s %13s %9s\n",
-//                    ord.getOrderID(),
-//                    ord.getCustomerID(),
-//                    CustomersService.getInstance().getCustomerById(ord.getCustomerID()).getCustomerName(),
-//                    ord.getProductID(),
-//                    ord.getOrderQuantity(),
-//                    Util.toString(ord.getOrderDate()),
-//                    ord.getStatus());
-//        }
-        System.out.println(toString());
+        Formatter fmt = new Formatter();
+        fmt.format("%9s %11s %17s %32s %21s %9s\n",
+                "OrderID",
+                "CustomerID",
+                "CustomerName",
+                "ProductID : Quantity",
+                "OrderDate",
+                "Status");
+        for (Orders ord : list) {
+            fmt.format("%9s %11s %17s %40s %13s %9s\n",
+                    ord.getOrderID(),
+                    ord.getCustomer().getCustomerID(),
+                    ord.getCustomer().getCustomerName(),
+                    getAllOrderLine(ord.getProductList()),
+                    Util.toString(ord.getOrderDate()),
+                    ord.getStatus());
+        }
+        System.out.println(fmt);
+    }
+
+    public String getAllOrderLine(List<OrderLine> list) {
+        String result = "{";
+        for (int i = 0; i < list.size(); i++) {
+
+        }
+        for (OrderLine ord : list) {
+            result += ord + ", ";
+        }
+        return result.substring(0, result.length() - 2) + "}";
     }
 
     @Override
@@ -124,8 +135,9 @@ public class OrderService extends DataManagement<Orders> {
             Orders existsOrder = getOrderById(obj.getOrderID());
             if (existsOrder != null) {
                 existsOrder.setProductList(obj.getProductList());
+            } else {
+                return obj;
             }
-            return obj;
         } catch (Exception ex) {
             Logger.getLogger(OrderService.class.getName()).log(Level.SEVERE, null, ex);
         }

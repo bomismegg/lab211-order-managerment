@@ -21,8 +21,22 @@ public class OrderLine {
         return orderQuantity;
     }
 
+    public void setProductID(String productID) {
+        this.productID = productID;
+    }
+
+    public void setOrderQuantity(int orderQuantity) {
+        this.orderQuantity = orderQuantity;
+    }
+
     public OrderLine(String productID, int orderQuantity) {
         this.productID = productID;
         this.orderQuantity = orderQuantity;
     }
+
+    @Override
+    public String toString() {
+        return "[" + productID + ":" + orderQuantity + "]";
+    }
+
 }
